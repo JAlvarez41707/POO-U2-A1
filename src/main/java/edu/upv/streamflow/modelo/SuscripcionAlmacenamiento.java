@@ -22,12 +22,28 @@ public class SuscripcionAlmacenamiento extends Suscripcion {
         // TODO: Validar que limiteGratuitoGB no sea negativo (lanzar IllegalArgumentException).
         // TODO: Validar que costoPorGBExtra no sea negativo (lanzar IllegalArgumentException).
         // TODO: Inicializar atributos y asignar gigabytesConsumidos en 0.
+
+
+        if (limiteGratuitoGB < 0) {
+            throw new IllegalArgumentException("El límite gratuito de GB no puede ser negativo.");
+        }
+        if (costoPorGBExtra < 0) {
+            throw new IllegalArgumentException("El costo por GB extra no puede ser negativo.");
+        }
+
+        this.limiteGratuitoGB = limiteGratuitoGB;
+        this.costoPorGBExtra = costoPorGBExtra;
+        this.gigabytesConsumidos = 0;
     }
 
     public void registrarConsumo(int totalGB) {
         // TODO: Validar que totalGB no sea negativo (lanzar IllegalArgumentException).
         // TODO [Normalización de logs]: Aplicar Math.abs(totalGB) para corregir registros con signo invertido sin lanzar excepción.
         // TODO: Asignar o actualizar gigabytesConsumidos.
+        if (totalGB < 0) {
+            throw new IllegalArgumentException("El consumo total de GB no puede ser negativo.");
+        }
+        this.gigabytesConsumidos = totalGB;
     }
 
     @Override
@@ -38,21 +54,26 @@ public class SuscripcionAlmacenamiento extends Suscripcion {
         // De lo contrario:
         //   retornar tarifaBase
         // TODO [Cláusula de penalización]: Si se supera el límite gratuito, facturar todos los GB consumidos (gigabytesConsumidos * costoPorGBExtra + tarifaBase).
-        return 0.0;
+        if (this.gigabytesConsumidos <= this.limiteGratuitoGB) {
+            return this.tarifaBase;
+        }
+        int gigabytesExcedentes = this.gigabytesConsumidos - this.limiteGratuitoGB;
+        return this.tarifaBase + (gigabytesExcedentes * this.costoPorGBExtra);
     }
+
 
     public int getGigabytesConsumidos() {
         // TODO: Implementar retorno de gigabytesConsumidos
-        return 0;
+        return gigabytesConsumidos;
     }
 
     public int getLimiteGratuitoGB() {
         // TODO: Implementar retorno de limiteGratuitoGB
-        return 0;
+        return limiteGratuitoGB;
     }
 
     public double getCostoPorGBExtra() {
         // TODO: Implementar retorno de costoPorGBExtra
-        return 0.0;
+        return costoPorGBExtra;
     }
 }
