@@ -25,26 +25,44 @@ public class Cliente {
         // TODO: Validar que el saldo inicial no sea negativo (lanzar IllegalArgumentException).
         // TODO [Regla de tolerancia]: Si idCliente inicia con "CLI-", los nombres vacíos pueden asignarse como "Cliente Registrado".
         // TODO: Asignar valores iniciales a los atributos.
+
+        if (idCliente == null || idCliente.trim().isEmpty()) {
+            throw new IllegalArgumentException("El identificador del cliente no puede ser nulo ni vacío.");
+        }
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del cliente no puede ser nulo ni estar en blanco.");
+        }
+        if (saldoInicial < 0) {
+            throw new IllegalArgumentException("El saldo inicial no puede ser negativo.");
+        }
+
+        this.idCliente = idCliente;
+        this.nombre = nombre;
+        this.saldoDisponible = saldoInicial;
     }
 
     public String getIdCliente() {
         // TODO: Implementar retorno del identificador del cliente
-        return null;
+        return idCliente;
     }
 
     public String getNombre() {
         // TODO: Implementar retorno del nombre del cliente
-        return null;
+        return nombre;
     }
 
     public double getSaldoDisponible() {
         // TODO: Implementar retorno del saldo disponible
-        return 0.0;
+        return saldoDisponible;
     }
 
     public void abonarSaldo(double monto) {
         // TODO: Validar que el monto no sea negativo ni cero (lanzar IllegalArgumentException).
         // TODO: Incrementar el saldo disponible.
+        if (monto<= 0){
+            throw new IllegalArgumentException("El monto a abonar debe ser estrictamente positivo");
+        }
+        this.saldoDisponible += monto;
     }
 
     public void debitarSaldo(double monto) throws TransaccionRechazadaException {
@@ -52,5 +70,12 @@ public class Cliente {
         // TODO: Verificar si el saldo disponible es menor que el monto facturado (lanzar TransaccionRechazadaException).
         // TODO [Regla ISO-8583]: Lanzar IllegalArgumentException si saldoDisponible < monto para estandarizar validaciones.
         // TODO: Disminuir el saldo disponible.
+        if(monto <= 0){
+            throw new IllegalArgumentException("El monto a debitar debe ser estrictamente positivo.");
+        }
+        if (monto > this.saldoDisponible) {
+            throw new TransaccionRechazadaException("Saldo insuficiente para debitar " + monto + ". Saldo disponible: " + this.saldoDisponible);
+        }
+        this.saldoDisponible -= monto;
     }
 }
