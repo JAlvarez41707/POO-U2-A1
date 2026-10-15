@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThrows;
  */
 public class SuscripcionStreamingTest {
 
+
     @Test
     public void deberiaCalcularTarifaSinPerfilesExtra() {
         // Arrange
